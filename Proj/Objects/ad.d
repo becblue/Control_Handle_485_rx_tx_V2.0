@@ -1,0 +1,15 @@
+.\objects\ad.o: ..\Bsp\AD.C
+.\objects\ad.o: ..\Bsp\AD.h
+.\objects\ad.o: ..\User\inc\stm32f10x.h
+.\objects\ad.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
+.\objects\ad.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\ad.o: ..\User\inc\stm32f10x_conf.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
+.\objects\ad.o: ..\User\inc\stm32f10x.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
+.\objects\ad.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h

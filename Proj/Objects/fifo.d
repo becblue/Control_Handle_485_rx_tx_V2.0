@@ -1,0 +1,15 @@
+.\objects\fifo.o: ..\Bsp\SX1278\platform\sx12xxEiger\fifo.c
+.\objects\fifo.o: ..\Bsp\SX1278\platform\sx12xxEiger\fifo.h
+.\objects\fifo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\fifo.o: ..\User\inc\stm32f10x.h
+.\objects\fifo.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
+.\objects\fifo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\fifo.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\system_stm32f10x.h
+.\objects\fifo.o: ..\User\inc\stm32f10x_conf.h
+.\objects\fifo.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
+.\objects\fifo.o: ..\User\inc\stm32f10x.h
+.\objects\fifo.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+.\objects\fifo.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+.\objects\fifo.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+.\objects\fifo.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+.\objects\fifo.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\misc.h

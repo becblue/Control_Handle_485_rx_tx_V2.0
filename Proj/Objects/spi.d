@@ -1,0 +1,15 @@
+.\objects\spi.o: ..\Bsp\SX1278\platform\sx12xxEiger\spi.c
+.\objects\spi.o: ..\Bsp\SX1278\platform\sx12xxEiger\spi.h
+.\objects\spi.o: ..\User\inc\stm32f10x.h
+.\objects\spi.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
+.\objects\spi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\spi.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\system_stm32f10x.h
+.\objects\spi.o: ..\User\inc\stm32f10x_conf.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
+.\objects\spi.o: ..\User\inc\stm32f10x.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\objects\spi.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_spi.h

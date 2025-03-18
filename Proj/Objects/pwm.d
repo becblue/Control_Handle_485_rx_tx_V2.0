@@ -1,0 +1,13 @@
+.\objects\pwm.o: ..\Bsp\PWM.c
+.\objects\pwm.o: ..\User\inc\stm32f10x.h
+.\objects\pwm.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
+.\objects\pwm.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\pwm.o: ..\User\inc\stm32f10x_conf.h
+.\objects\pwm.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
+.\objects\pwm.o: ..\User\inc\stm32f10x.h
+.\objects\pwm.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+.\objects\pwm.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+.\objects\pwm.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+.\objects\pwm.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+.\objects\pwm.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\objects\pwm.o: ..\Bsp\PWM.h

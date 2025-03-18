@@ -1,0 +1,94 @@
+T2034 011:720.565   SEGGER J-Link V6.70e Log File
+T2034 011:720.629   DLL Compiled: Apr 17 2020 17:55:05
+T2034 011:720.639   Logging started @ 2021-01-24 07:18
+T2034 011:720.650 JLINK_SetWarnOutHandler(...)
+T2034 011:720.658 - 0.011ms
+T2034 011:720.667 JLINK_OpenEx(...)
+T2034 011:723.734   Firmware: J-Link V9 compiled Dec 13 2019 11:14:50
+T2034 011:724.009   Decompressing FW timestamp took 240 us
+T2034 011:731.387   Hardware: V9.40
+T2034 011:731.418   S/N: 59414494
+T2034 011:731.429   OEM: SEGGER
+T2034 011:731.440   Feature(s): RDI, GDB, FlashDL, FlashBP, JFlash
+T2034 011:733.432   TELNET listener socket opened on port 19021
+T2034 011:739.461   WEBSRV Starting webserver
+T2034 011:740.881   WEBSRV Webserver running on local port 19080
+T2034 011:740.907 - 20.243ms returns "O.K."
+T2034 011:740.924 JLINK_GetEmuCaps()
+T2034 011:740.933 - 0.012ms returns 0xB9FF7BBF
+T2034 011:740.944 JLINK_TIF_GetAvailable(...)
+T2034 011:741.244 - 0.311ms
+T2034 011:741.264 JLINK_SetErrorOutHandler(...)
+T2034 011:741.272 - 0.011ms
+T2034 011:741.294 JLINK_ExecCommand("ProjectFile = "G:\Project\山东\枣庄赵日强\6路电机6路PWM\MCU-Software\WirelessControllerV1.1\Proj\JLinkSettings.ini"", ...). 
+T2034 011:743.469 - 2.190ms returns 0x00
+T2034 011:745.266 JLINK_ExecCommand("Device = STM32F103C8", ...). 
+T2034 011:745.692   Device "STM32F103C8" selected.
+T2034 011:746.295 - 1.011ms returns 0x00
+T2034 011:746.314 JLINK_ExecCommand("DisableConnectionTimeout", ...). 
+T2034 011:746.331 - 0.009ms returns 0x01
+T2034 011:746.341 JLINK_GetHardwareVersion()
+T2034 011:746.349 - 0.011ms returns 0x16F30
+T2034 011:746.359 JLINK_GetDLLVersion()  returns 67005
+T2034 011:746.370 JLINK_GetFirmwareString(...)
+T2034 011:746.377 - 0.011ms
+T2034 011:746.390 JLINK_GetDLLVersion()  returns 67005
+T2034 011:746.399 JLINK_GetCompileDateTime()
+T2034 011:746.408 - 0.013ms
+T2034 011:746.421 JLINK_GetFirmwareString(...)
+T2034 011:746.428 - 0.011ms
+T2034 011:746.438 JLINK_GetHardwareVersion()
+T2034 011:746.446 - 0.010ms returns 0x16F30
+T2034 011:746.464 JLINK_TIF_Select(JLINKARM_TIF_JTAG)
+T2034 011:748.610 - 2.160ms returns 0x00
+T2034 011:748.638 JLINK_SetSpeed(5000)
+T2034 011:749.146 - 0.524ms
+T2034 011:749.477 JLINK_SetResetType(JLINKARM_RESET_TYPE_NORMAL)
+T2034 011:749.497 - 0.024ms returns JLINKARM_RESET_TYPE_NORMAL
+T2034 011:749.507 JLINK_Reset()
+T2034 011:751.392   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 011:751.872   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T2034 011:804.830   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 011:805.303   
+  ***** Error: 
+T2034 011:805.341   STM32: Connecting to CPU via connect under reset failed.
+T2034 011:918.613   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 011:919.270   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T2034 011:971.484   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 011:972.123   
+  ***** Error: 
+T2034 011:972.149   STM32: Connecting to CPU via connect under reset failed.
+T2034 012:022.488 JLINK_GetIdData(pIdData)
+T2034 012:024.665   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:025.262   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T2034 012:077.491   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:078.257   
+  ***** Error: 
+T2034 012:078.280   STM32: Connecting to CPU via connect under reset failed.
+T2034 012:191.611   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:192.258   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T2034 012:244.352   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:245.163   
+  ***** Error: 
+T2034 012:245.188   STM32: Connecting to CPU via connect under reset failed.
+T2034 012:295.531 - 273.106ms
+T2034 012:295.615 JLINK_GetIdData(pIdData)
+T2034 012:298.469   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:299.101   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T2034 012:351.479   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:352.116   
+  ***** Error: 
+T2034 012:352.132   STM32: Connecting to CPU via connect under reset failed.
+T2034 012:465.161   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:465.600   STM32 (connect): Can not attach to CPU. Trying connect under reset.
+T2034 012:516.899   TotalIRLen = ?, IRPrint = 0x..000000000000000000000000
+T2034 012:517.476   
+  ***** Error: 
+T2034 012:517.500   STM32: Connecting to CPU via connect under reset failed.
+T2034 012:567.662 - 272.072ms
+T2034 012:568.737 JLINK_GetFirmwareString(...)
+T2034 012:568.759 - 0.025ms
+T2034 013:683.934 JLINK_Close()
+T2034 013:694.729 - 10.823ms
+T2034 013:694.762   
+T2034 013:694.769   Closed

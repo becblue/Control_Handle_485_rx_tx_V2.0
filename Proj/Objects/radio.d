@@ -1,0 +1,17 @@
+.\objects\radio.o: ..\Bsp\SX1278\radio\radio.c
+.\objects\radio.o: ..\User\inc\stm32f10x.h
+.\objects\radio.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
+.\objects\radio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\radio.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\system_stm32f10x.h
+.\objects\radio.o: ..\User\inc\stm32f10x_conf.h
+.\objects\radio.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
+.\objects\radio.o: ..\User\inc\stm32f10x.h
+.\objects\radio.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+.\objects\radio.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+.\objects\radio.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+.\objects\radio.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+.\objects\radio.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\objects\radio.o: ..\Bsp\SX1278\platform\platform.h
+.\objects\radio.o: ..\Bsp\SX1278\platform\sx12xxEiger\sx12xxEiger.h
+.\objects\radio.o: ..\Bsp\SX1278\radio\radio.h
+.\objects\radio.o: ..\Bsp\SX1278\radio\sx1276.h
