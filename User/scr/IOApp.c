@@ -3,6 +3,10 @@
 #include "IOApp.h"
 #include "Key.h"
 
+#if DEVICE_MODE==DEVICE_MODE_RECV
+static uint32_t g_LastReceivedData = 0;  // 保存最后接收到的原始数据（接收模式专用）
+#endif
+
 #if DEVICE_MODE==DEVICE_MODE_SEND
 IO_APP_STRUCT IO_App_Out_Struct[GPIO_LED_NUM]=
 #else
@@ -116,6 +120,9 @@ void IO_APP_Get_IO_Value(uint8_t * UartTxBuff)
 	uint32_t result = 0;
 	static uint32_t ShiftValue[2]={0,0};
 	uint8_t i=0;
+#if DEVICE_MODE==DEVICE_MODE_RECV
+	uint32_t originalResult = 0;  // 接收模式下使用的变量，移到函数开头声明
+#endif
 	for(i=0;i<sizeof(IO_App_In_Struct)/sizeof(IO_APP_STRUCT);i++)
 	{
 #if DEVICE_MODE==DEVICE_MODE_SEND
@@ -169,6 +176,19 @@ void IO_APP_Get_IO_Value(uint8_t * UartTxBuff)
 		}
 #endif
 	}
+
+    // === 新增：仅在接收模式下调整返回数据 ===
+#if DEVICE_MODE==DEVICE_MODE_RECV
+    // 保存原始result作为输入状态
+    originalResult = result;
+    
+    // 对于PC3-PC6（bit0-3），返回最后接收到的原始激活状态
+    result = result & 0xFFFFFFF0;  // 清除bit0-3
+    result = result | (g_LastReceivedData & 0x0000000F);  // 设置bit0-3为原始接收数据
+    
+    // bit4及以上保持原有逻辑（输入状态）
+#endif
+
 	UartTxBuff[0]=((result>>0)&0xFF);
 	UartTxBuff[1]=((result>>8)&0xFF);
 	UartTxBuff[2]=((result>>16)&0xFF);
@@ -193,6 +213,10 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 		}
 	}
 #else
+
+    // === 新增：保存原始接收数据 ===
+    g_LastReceivedData = result;
+
 	// 接收模式下：PC3-PC6需要与PB0进行与逻辑判断
 	for(i=0;i<sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT);i++)
 	{
