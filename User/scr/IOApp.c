@@ -19,6 +19,11 @@ uint8_t g_IsCrcError = 0;
 // 发送数据调试相关
 uint8_t g_HasNewTxData = 0;
 uint8_t g_LatestTxData[14];
+// PA0,PA3,PA4,PA5闪烁功能相关（50ms = 50次1ms中断）
+uint16_t g_BlinkTimer = 0;
+uint8_t g_BlinkState = 0;  // 0=灭，1=亮
+uint8_t g_PA_BlinkEnable[4] = {0, 0, 0, 0};  // PA0,PA3,PA4,PA5闪烁使能
+uint8_t g_PA_NormalEnable[4] = {0, 0, 0, 0}; // PA0,PA3,PA4,PA5正常置位使能
 #endif
 
 #if DEVICE_MODE==DEVICE_MODE_SEND
@@ -211,11 +216,53 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 {
 	uint32_t result;
 	uint8_t i=0;
+#if DEVICE_MODE==DEVICE_MODE_SEND
+	extern uint8_t g_LatestTxData[14];
+	uint32_t tx_result = 0;
+	uint8_t pb0_in_tx_data = 0;
+#endif
+	
 	result=UartTxBuff[0] + (UartTxBuff[1]<<8) + (UartTxBuff[2]<<16);
 	
 #if DEVICE_MODE==DEVICE_MODE_SEND
-	// 发送模式下：PA0-PA5直接根据接收数据控制，无特殊限制
-	for(i=0;i<sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT);i++)
+	// 发送模式下，PA0,PA3,PA4,PA5逻辑：检测接收数据包bit0-3 + 发送数据包PB0状态
+	// 首先清空所有状态
+	for(i = 0; i < 4; i++) {
+		g_PA_BlinkEnable[i] = 0;
+		g_PA_NormalEnable[i] = 0;
+	}
+	
+	// 检测发送数据包中PB0的状态（从最新发送数据中获取）
+	
+	// 解析发送数据包中的IO状态（如果有效）
+	if(g_LatestTxData[0] == 0xAA) {  // 有效的数据包
+		tx_result = g_LatestTxData[1] + (g_LatestTxData[2]<<8) + (g_LatestTxData[3]<<16);
+		pb0_in_tx_data = (tx_result & (0x01<<13)) ? 1 : 0;  // 检测bit13(PB0)
+	}
+	
+	// 只处理PA0,PA3,PA4,PA5 (索引0-3)
+	for(i = 0; i < 4; i++)
+	{
+		if((result&(0x01<<i))==(0x01<<i))  // 接收数据包中bit0-3被置位
+		{
+			if(pb0_in_tx_data)  // 发送数据包中PB0被置位
+			{
+				g_PA_BlinkEnable[i] = 1;   // 启用闪烁模式
+			}
+			else  // 发送数据包中PB0未置位
+			{
+				g_PA_NormalEnable[i] = 1;  // 启用正常置位模式
+			}
+		}
+		// 如果接收数据包中bit0-3未置位，则保持关闭状态（已在上面清空）
+	}
+	
+	// 立即应用新的状态（调用闪烁处理函数）
+	PA_Blink_Process();
+	
+	// 处理PA6,PA7,PA8,PA12等其他IO（索引4及以上）
+	// 这些IO保持原有的简单逻辑：直接根据接收数据包对应bit控制
+	for(i = 4; i < sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT); i++)
 	{
 		if((result&(0x01<<i))==(0x01<<i))
 		{
@@ -398,6 +445,8 @@ void Debug_OutputData(void)
 			Debug_PrintHex((tx_io_result>>2)&1);
 			Debug_Print(" PC6=");
 			Debug_PrintHex((tx_io_result>>3)&1);
+			Debug_Print(" bit8=");
+			Debug_PrintHex((tx_io_result>>8)&1);
 			Debug_Print("\r\n");
 		}
 		g_HasNewTxData = 0;  // 清除发送数据标记
@@ -445,6 +494,8 @@ void Debug_OutputData(void)
 				Debug_PrintHex((rx_io_result>>2)&1);
 				Debug_Print(" bit3=");
 				Debug_PrintHex((rx_io_result>>3)&1);
+				Debug_Print(" bit8=");
+				Debug_PrintHex((rx_io_result>>8)&1);
 				Debug_Print(" bit13=");
 				Debug_PrintHex((rx_io_result>>13)&1);
 				Debug_Print("\r\n");
@@ -454,6 +505,34 @@ void Debug_OutputData(void)
 	}
 	
 	Debug_Print("\r\n");  // 添加分隔行
+}
+
+/*-------------------------------------------------*/
+/*函数名：PA闪烁处理函数                           */
+/*参  数：无                                       */
+/*返回值：无                                       */
+/*说  明：处理PA0,PA3,PA4,PA5的闪烁和正常状态     */
+/*-------------------------------------------------*/
+void PA_Blink_Process(void)
+{
+	int i;
+	
+	for(i = 0; i < 4; i++) {
+		if(g_PA_BlinkEnable[i]) {
+			// 闪烁模式：根据g_BlinkState设置GPIO状态
+			if(g_BlinkState) {
+				GPIO_SetBits(IO_App_Out_Struct[i].GPIOx, IO_App_Out_Struct[i].GPIO_Pin);
+			} else {
+				GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx, IO_App_Out_Struct[i].GPIO_Pin);
+			}
+		} else if(g_PA_NormalEnable[i]) {
+			// 正常模式：稳定置位
+			GPIO_SetBits(IO_App_Out_Struct[i].GPIOx, IO_App_Out_Struct[i].GPIO_Pin);
+		} else {
+			// 关闭状态
+			GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx, IO_App_Out_Struct[i].GPIO_Pin);
+		}
+	}
 }
 #endif
 #endif

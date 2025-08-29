@@ -41,5 +41,11 @@ extern uint8_t g_IsCrcError;
 extern uint8_t g_HasNewTxData;
 extern uint8_t g_LatestTxData[14];
 void Debug_OutputData(void);
+// PA0,PA3,PA4,PA5闪烁功能相关
+extern uint16_t g_BlinkTimer;
+extern uint8_t g_BlinkState;
+extern uint8_t g_PA_BlinkEnable[4];
+extern uint8_t g_PA_NormalEnable[4];
+void PA_Blink_Process(void);
 #endif
 #endif

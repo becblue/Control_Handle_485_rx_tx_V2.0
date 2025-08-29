@@ -56,6 +56,8 @@ void TIM2_IRQHandler(void)
 #if DEVICE_MODE==DEVICE_MODE_SEND
 	extern uint8_t g_HasNewDebugData;  // 接收数据标记
 	extern uint8_t g_HasNewTxData;     // 发送数据标记
+	extern uint16_t g_BlinkTimer;      // 闪烁计时器
+	extern uint8_t g_BlinkState;       // 闪烁状态
 #endif
 
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
@@ -73,6 +75,14 @@ void TIM2_IRQHandler(void)
 			if(g_HasNewDebugData || g_HasNewTxData) {
 				Debug_OutputData();
 			}
+		}
+		
+		// PA闪烁计时器处理（每50ms切换一次闪烁状态）
+		g_BlinkTimer++;
+		if(g_BlinkTimer >= 50) {
+			g_BlinkTimer = 0;
+			g_BlinkState = !g_BlinkState;  // 切换闪烁状态 (0<->1)
+			PA_Blink_Process();  // 更新GPIO状态
 		}
 #endif
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);     			  //清除TIM4溢出中断标志 	
