@@ -3,7 +3,7 @@
 #include "includes.h"
 #define DEVICE_MODE_SEND	0
 #define DEVICE_MODE_RECV	1
-#define DEVICE_MODE			DEVICE_MODE_SEND
+#define DEVICE_MODE			DEVICE_MODE_RECV
 
 
 

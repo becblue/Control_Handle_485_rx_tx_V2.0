@@ -182,7 +182,23 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 	{
 		if((result&(0x01<<i))==(0x01<<i))
 		{
-			GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+			// PC3-PC6 (索引0-3) 需要与PB0 (索引13) 进行与逻辑判断
+			if(i <= 3)  // PC3(0), PC4(1), PC5(2), PC6(3)
+			{
+				// 只有当PB0对应的bit13也被置位时，PC3-PC6才能输出高电平
+				if((result&(0x01<<13))==(0x01<<13))  // PB0被置位
+				{
+					GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+				}
+				else
+				{
+					GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+				}
+			}
+			else  // 其他IO引脚保持原逻辑
+			{
+				GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+			}
 		}
 		else
 		{
