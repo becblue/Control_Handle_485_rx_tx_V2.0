@@ -10,6 +10,7 @@
 #include "timer2.h"
 #include "Key.h"
 #include "object/Timer.h"
+#include "IOApp.h"
 
 /*-------------------------------------------------*/
 /*函数名：定时器4初始化                            */
@@ -52,12 +53,28 @@ void TIM2_Init(unsigned short int arr, unsigned short int psc)
 /*-------------------------------------------------*/
 void TIM2_IRQHandler(void)
 {
+#if DEVICE_MODE==DEVICE_MODE_SEND
+	extern uint8_t g_HasNewDebugData;  // 接收数据标记
+	extern uint8_t g_HasNewTxData;     // 发送数据标记
+#endif
 
 	if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
 	{                //如果TIM_IT_Update置位，表示TIM4溢出中断，进入if	
 		
 		timerCount(&timer);
 		ReadKey();
+		
+#if DEVICE_MODE==DEVICE_MODE_SEND
+		// 发送模式下的调试计时器处理（每500ms输出一次）
+		g_DebugTimer++;
+		if(g_DebugTimer >= 500) {
+			g_DebugTimer = 0;
+			// 检查是否有新的调试数据需要输出（发送或接收数据）
+			if(g_HasNewDebugData || g_HasNewTxData) {
+				Debug_OutputData();
+			}
+		}
+#endif
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);     			  //清除TIM4溢出中断标志 	
 	}
 }

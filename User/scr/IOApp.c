@@ -8,6 +8,20 @@ static uint32_t g_LastReceivedData = 0;  // 保存最后接收到的原始数据（接收模式专
 #endif
 
 #if DEVICE_MODE==DEVICE_MODE_SEND
+// 发送模式下的调试计时器变量（500ms = 500次1ms中断）
+uint16_t g_DebugTimer = 0;
+// 标记是否有新的数据包需要输出
+uint8_t g_HasNewDebugData = 0;
+// 存储最新的接收调试数据
+uint8_t g_LatestRxData[14];
+uint16_t g_LatestCheckSum = 0;
+uint8_t g_IsCrcError = 0;
+// 发送数据调试相关
+uint8_t g_HasNewTxData = 0;
+uint8_t g_LatestTxData[14];
+#endif
+
+#if DEVICE_MODE==DEVICE_MODE_SEND
 IO_APP_STRUCT IO_App_Out_Struct[GPIO_LED_NUM]=
 #else
 IO_APP_STRUCT IO_App_In_Struct[GPIO_IN_NUM]=
@@ -247,4 +261,199 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 	}
 #endif
 }
+
+/*-------------------------------------------------*/
+/*函数名：USART3调试初始化函数                     */
+/*参  数：波特率                                   */
+/*返回值：无                                       */
+/*说  明：初始化USART3用于调试输出，PB10(TX),PB11(RX)*/
+/*-------------------------------------------------*/
+void USART3_Debug_Init(uint32_t baudrate)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	USART_InitTypeDef USART_InitStructure;
+	
+	// 使能USART3和GPIOB时钟
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	
+	// 配置PB10为USART3_TX (推挽复用输出)
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
+	// 配置PB11为USART3_RX (浮空输入)
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
+	// 配置USART3参数
+	USART_InitStructure.USART_BaudRate = baudrate;
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;
+	USART_InitStructure.USART_Parity = USART_Parity_No;
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+	USART_Init(USART3, &USART_InitStructure);
+	
+	// 使能USART3
+	USART_Cmd(USART3, ENABLE);
+}
+
+/*-------------------------------------------------*/
+/*函数名：USART3发送字符函数                       */
+/*参  数：字符                                     */
+/*返回值：无                                       */
+/*说  明：通过USART3发送单个字符                   */
+/*-------------------------------------------------*/
+void USART3_SendChar(char ch)
+{
+	// 等待发送寄存器空
+	while(USART_GetFlagStatus(USART3, USART_FLAG_TXE) == RESET);
+	
+	// 发送字符
+	USART_SendData(USART3, ch);
+	
+	// 等待发送完成
+	while(USART_GetFlagStatus(USART3, USART_FLAG_TC) == RESET);
+}
+
+/*-------------------------------------------------*/
+/*函数名：USART3发送字符串函数                     */
+/*参  数：字符串指针                               */
+/*返回值：无                                       */
+/*说  明：通过USART3发送字符串                     */
+/*-------------------------------------------------*/
+void Debug_Print(char* str)
+{
+	while(*str) {
+		USART3_SendChar(*str);
+		str++;
+	}
+}
+
+/*-------------------------------------------------*/
+/*函数名：USART3发送十六进制数函数                 */
+/*参  数：32位数值                                */
+/*返回值：无                                       */
+/*说  明：以十六进制格式发送数值 (0x12345678)      */
+/*-------------------------------------------------*/
+void Debug_PrintHex(uint32_t value)
+{
+	char hex_chars[] = "0123456789ABCDEF";
+	char buffer[11] = "0x";
+	int i;
+	
+	// 转换为十六进制字符串
+	for(i = 7; i >= 0; i--) {
+		buffer[2 + (7-i)] = hex_chars[(value >> (i*4)) & 0x0F];
+	}
+	buffer[10] = '\0';
+	
+	Debug_Print(buffer);
+}
+
+#if DEVICE_MODE==DEVICE_MODE_SEND
+/*-------------------------------------------------*/
+/*函数名：调试数据输出函数                         */
+/*参  数：无                                       */
+/*返回值：无                                       */
+/*说  明：每500ms输出一次调试信息，避免刷屏        */
+/*-------------------------------------------------*/
+void Debug_OutputData(void)
+{
+	int i;
+	
+	// 输出发送数据（如果有新的发送数据）
+	if(g_HasNewTxData) {
+		Debug_Print("TX Data: [");
+		for(i = 0; i < 14; i++) {
+			Debug_PrintHex(g_LatestTxData[i]);
+			if(i < 13) Debug_Print(" ");
+		}
+		Debug_Print("]\r\n");
+		
+		// 输出发送的IO状态字节详细信息
+		Debug_Print("TX IO Status: B0=");
+		Debug_PrintHex(g_LatestTxData[1]);
+		Debug_Print(" B1=");
+		Debug_PrintHex(g_LatestTxData[2]);
+		Debug_Print(" B2=");
+		Debug_PrintHex(g_LatestTxData[3]);
+		Debug_Print("\r\n");
+		
+		// 输出发送的具体IO位状态
+		{
+			uint32_t tx_io_result = (((uint32_t)g_LatestTxData[3])<<16) | 
+			                        (((uint32_t)g_LatestTxData[2])<<8) | 
+			                        ((uint32_t)g_LatestTxData[1]);
+			Debug_Print("TX IO Bits: ");
+			Debug_PrintHex(tx_io_result);
+			Debug_Print(" -> KEY1=");
+			Debug_PrintHex((tx_io_result>>0)&1);
+			Debug_Print(" PC4=");
+			Debug_PrintHex((tx_io_result>>1)&1);
+			Debug_Print(" PC5=");
+			Debug_PrintHex((tx_io_result>>2)&1);
+			Debug_Print(" PC6=");
+			Debug_PrintHex((tx_io_result>>3)&1);
+			Debug_Print("\r\n");
+		}
+		g_HasNewTxData = 0;  // 清除发送数据标记
+	}
+	
+	// 输出接收数据（如果有新的接收数据）
+	if(g_HasNewDebugData) {
+		if(g_IsCrcError) {
+			// CRC校验失败时的诊断信息
+			Debug_Print("RX CRC Error! Calc=");
+			Debug_PrintHex(g_LatestCheckSum);
+			Debug_Print(" Recv=");
+			Debug_PrintHex(g_LatestRxData[12]+(g_LatestRxData[13]<<8));
+			Debug_Print("\r\n");
+		} else {
+			// 输出完整接收数据包
+			Debug_Print("RX Data: [");
+			for(i = 0; i < 14; i++) {
+				Debug_PrintHex(g_LatestRxData[i]);
+				if(i < 13) Debug_Print(" ");
+			}
+			Debug_Print("]\r\n");
+			
+			// 输出接收的IO状态字节的详细信息
+			Debug_Print("RX IO Status: B0=");
+			Debug_PrintHex(g_LatestRxData[1]);
+			Debug_Print(" B1=");
+			Debug_PrintHex(g_LatestRxData[2]);
+			Debug_Print(" B2=");
+			Debug_PrintHex(g_LatestRxData[3]);
+			Debug_Print("\r\n");
+			
+			// 输出接收的具体IO位状态
+			{
+				uint32_t rx_io_result = (((uint32_t)g_LatestRxData[3])<<16) | 
+				                        (((uint32_t)g_LatestRxData[2])<<8) | 
+				                        ((uint32_t)g_LatestRxData[1]);
+				Debug_Print("RX IO Bits: ");
+				Debug_PrintHex(rx_io_result);
+				Debug_Print(" -> bit0=");
+				Debug_PrintHex((rx_io_result>>0)&1);
+				Debug_Print(" bit1=");
+				Debug_PrintHex((rx_io_result>>1)&1);
+				Debug_Print(" bit2=");
+				Debug_PrintHex((rx_io_result>>2)&1);
+				Debug_Print(" bit3=");
+				Debug_PrintHex((rx_io_result>>3)&1);
+				Debug_Print(" bit13=");
+				Debug_PrintHex((rx_io_result>>13)&1);
+				Debug_Print("\r\n");
+			}
+		}
+		g_HasNewDebugData = 0;  // 清除接收数据标记
+	}
+	
+	Debug_Print("\r\n");  // 添加分隔行
+}
+#endif
 #endif

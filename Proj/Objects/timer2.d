@@ -25,3 +25,4 @@
 .\objects\timer2.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\timer2.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\timer2.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\timer2.o: ..\User\inc\IOApp.h
