@@ -178,6 +178,22 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 	uint32_t result;
 	uint8_t i=0;
 	result=UartTxBuff[0] + (UartTxBuff[1]<<8) + (UartTxBuff[2]<<16);
+	
+#if DEVICE_MODE==DEVICE_MODE_SEND
+	// 发送模式下：PA0-PA5直接根据接收数据控制，无特殊限制
+	for(i=0;i<sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT);i++)
+	{
+		if((result&(0x01<<i))==(0x01<<i))
+		{
+			GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+		}
+		else
+		{
+			GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+		}
+	}
+#else
+	// 接收模式下：PC3-PC6需要与PB0进行与逻辑判断
 	for(i=0;i<sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT);i++)
 	{
 		if((result&(0x01<<i))==(0x01<<i))
@@ -205,5 +221,6 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 			GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
 		}
 	}
+#endif
 }
 #endif
