@@ -2,7 +2,7 @@
 .\objects\bsp.o: ..\User\inc\includes.h
 .\objects\bsp.o: ..\User\inc\stm32f10x.h
 .\objects\bsp.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
-.\objects\bsp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\bsp.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\bsp.o: ..\User\inc\stm32f10x_conf.h
 .\objects\bsp.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
 .\objects\bsp.o: ..\User\inc\stm32f10x.h
@@ -16,13 +16,13 @@
 .\objects\bsp.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_iwdg.h
 .\objects\bsp.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_pwr.h
 .\objects\bsp.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_exti.h
-.\objects\bsp.o: ..\User\inc\object\Timer.h
+.\objects\bsp.o: ..\User\inc\object/Timer.h
 .\objects\bsp.o: ..\User\inc\includes.h
-.\objects\bsp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\bsp.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\bsp.o: ..\Bsp\Bsp.h
 .\objects\bsp.o: ..\Bsp\IO.h
-.\objects\bsp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\bsp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\bsp.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\bsp.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\bsp.o: ..\Bsp\AD.h
 .\objects\bsp.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
 .\objects\bsp.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h

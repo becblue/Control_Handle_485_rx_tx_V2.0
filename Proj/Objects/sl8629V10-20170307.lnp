@@ -7,6 +7,7 @@
 ".\objects\ioapp.o"
 ".\objects\adapp.o"
 ".\objects\aoapp.o"
+".\objects\average.o"
 ".\objects\misc.o"
 ".\objects\stm32f10x_flash.o"
 ".\objects\stm32f10x_gpio.o"

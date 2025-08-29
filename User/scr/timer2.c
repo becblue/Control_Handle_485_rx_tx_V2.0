@@ -8,8 +8,8 @@
 
 #include "stm32f10x.h"  //包含需要的头文件
 #include "timer2.h"
-#include "StorageManager.h"
 #include "Key.h"
+#include "object/Timer.h"
 
 /*-------------------------------------------------*/
 /*函数名：定时器4初始化                            */

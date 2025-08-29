@@ -2,7 +2,7 @@
 .\objects\average.o: ..\User\inc\Average.h
 .\objects\average.o: ..\User\inc\stm32f10x.h
 .\objects\average.o: ..\Lib\CMSIS\CM3\CoreSupport\core_cm3.h
-.\objects\average.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\average.o: D:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\average.o: ..\User\inc\stm32f10x_conf.h
 .\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
 .\objects\average.o: ..\User\inc\stm32f10x.h
@@ -11,17 +11,3 @@
 .\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
 .\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\misc.h
-.\objects\average.o: ..\User\inc\StorageManager.h
-.\objects\average.o: ..\User\inc\includes.h
-.\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_flash.h
-.\objects\average.o: ..\User\inc\stm32f10x_it.h
-.\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_iwdg.h
-.\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_pwr.h
-.\objects\average.o: ..\Lib\STM32F10x_StdPeriph_Driver\inc\stm32f10x_exti.h
-.\objects\average.o: ..\User\inc\object\Timer.h
-.\objects\average.o: ..\User\inc\includes.h
-.\objects\average.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
-.\objects\average.o: ..\Bsp\Bsp.h
-.\objects\average.o: ..\Bsp\IO.h
-.\objects\average.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\average.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
