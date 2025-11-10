@@ -167,23 +167,19 @@ void IO_APP_Get_IO_Value(uint8_t * UartTxBuff)
 				ShiftValue[0]=ShiftValue[0]<<1;
 			}
 		}
-		if(GetKeyValue(KEY5)==1)
+	if(GetKeyValue(KEY5)==1)
+	{
+		ClrKeyCount(KEY5);
+		ClrKeyValue(KEY5);
+		if(ShiftValue[1]==0)
 		{
-			ClrKeyCount(KEY5);
-			ClrKeyValue(KEY5);
-			if(ShiftValue[1]==0)
-			{
-				ShiftValue[1]=0x10;
-			}
-			else if(ShiftValue[1]==0x80)
-			{
-				ShiftValue[1]=0;
-			}
-			else
-			{
-				ShiftValue[1]=ShiftValue[1]<<1;
-			}
+			ShiftValue[1]=0x10;
 		}
+		else
+		{
+			ShiftValue[1]=0;
+		}
+	}
 		result=result&(0xFFFFFFFF-ShiftValue[0]);
 		result=result|(ShiftValue[0]);
 		result=result&(0xFFFFFFFF-ShiftValue[1]);
@@ -232,12 +228,12 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 		g_PA_NormalEnable[i] = 0;
 	}
 	
-	// 检测发送数据包中PB4的状态（从最新发送数据中获取）
+	// 检测发送数据包中PC12(KEY10)的状态（从最新发送数据中获取）
 	
 	// 解析发送数据包中的IO状态（如果有效）
 	if(g_LatestTxData[0] == 0xAA) {  // 有效的数据包
 		tx_result = g_LatestTxData[1] + (g_LatestTxData[2]<<8) + (g_LatestTxData[3]<<16);
-		pb0_in_tx_data = (tx_result & (0x01<<16)) ? 1 : 0;  // 检测bit16(PB4)
+		pb0_in_tx_data = (tx_result & (0x01<<9)) ? 1 : 0;  // 检测bit9(PC12/KEY10)
 	}
 	
 	// 只处理PA0,PA3,PA4,PA5 (索引0-3)
@@ -278,28 +274,40 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
     // === 新增：保存原始接收数据 ===
     g_LastReceivedData = result;
 
-	// 接收模式下：PC3-PC6需要与PB4进行与逻辑判断
+	// 接收模式下：PC3-PC6需要与PC12(KEY10)进行与逻辑判断
 	for(i=0;i<sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT);i++)
 	{
 		if((result&(0x01<<i))==(0x01<<i))
 		{
-			// PC3-PC6 (索引0-3) 需要与PB4 (索引16) 进行与逻辑判断
-			if(i <= 3)  // PC3(0), PC4(1), PC5(2), PC6(3)
-			{
-				// 只有当PB4对应的bit16也被置位时，PC3-PC6才能输出高电平
-				if((result&(0x01<<16))==(0x01<<16))  // PB4被置位
-				{
-					GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
-				}
-				else
-				{
-					GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
-				}
-			}
-			else  // 其他IO引脚保持原逻辑
+		// PC3-PC6 (索引0-3) 需要与PC12 (索引9) 进行与逻辑判断
+		if(i <= 3)  // PC3(0), PC4(1), PC5(2), PC6(3)
+		{
+			// 只有当PC12(KEY10)对应的bit9也被置位时，PC3-PC6才能输出高电平
+			if((result&(0x01<<9))==(0x01<<9))  // PC12(KEY10)被置位
 			{
 				GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
 			}
+			else
+			{
+				GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+			}
+		}
+		else if(i == 8 || i == 15)  // bit8(KEY9)和bit15(KEY16)需要bit16(KEY17)使能
+		{
+			// 只有当KEY17(PB4)对应的bit16也被置位时，才能输出高电平
+			if((result&(0x01<<16))==(0x01<<16))  // KEY17(PB4)被置位
+			{
+				GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+			}
+			else
+			{
+				GPIO_ResetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+			}
+		}
+		else  // 其他IO引脚保持原逻辑，直接控制
+		{
+			GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
+		}
 		}
 		else
 		{
