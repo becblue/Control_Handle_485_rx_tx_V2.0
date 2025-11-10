@@ -225,19 +225,19 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
 	result=UartTxBuff[0] + (UartTxBuff[1]<<8) + (UartTxBuff[2]<<16);
 	
 #if DEVICE_MODE==DEVICE_MODE_SEND
-	// 发送模式下，PA0,PA3,PA4,PA5逻辑：检测接收数据包bit0-3 + 发送数据包PB0状态
+	// 发送模式下，PA0,PA3,PA4,PA5逻辑：检测接收数据包bit0-3 + 发送数据包PB4状态
 	// 首先清空所有状态
 	for(i = 0; i < 4; i++) {
 		g_PA_BlinkEnable[i] = 0;
 		g_PA_NormalEnable[i] = 0;
 	}
 	
-	// 检测发送数据包中PB0的状态（从最新发送数据中获取）
+	// 检测发送数据包中PB4的状态（从最新发送数据中获取）
 	
 	// 解析发送数据包中的IO状态（如果有效）
 	if(g_LatestTxData[0] == 0xAA) {  // 有效的数据包
 		tx_result = g_LatestTxData[1] + (g_LatestTxData[2]<<8) + (g_LatestTxData[3]<<16);
-		pb0_in_tx_data = (tx_result & (0x01<<13)) ? 1 : 0;  // 检测bit13(PB0)
+		pb0_in_tx_data = (tx_result & (0x01<<16)) ? 1 : 0;  // 检测bit16(PB4)
 	}
 	
 	// 只处理PA0,PA3,PA4,PA5 (索引0-3)
@@ -278,16 +278,16 @@ void IO_APP_Set_IO_Value(uint8_t * UartTxBuff)
     // === 新增：保存原始接收数据 ===
     g_LastReceivedData = result;
 
-	// 接收模式下：PC3-PC6需要与PB0进行与逻辑判断
+	// 接收模式下：PC3-PC6需要与PB4进行与逻辑判断
 	for(i=0;i<sizeof(IO_App_Out_Struct)/sizeof(IO_APP_STRUCT);i++)
 	{
 		if((result&(0x01<<i))==(0x01<<i))
 		{
-			// PC3-PC6 (索引0-3) 需要与PB0 (索引13) 进行与逻辑判断
+			// PC3-PC6 (索引0-3) 需要与PB4 (索引16) 进行与逻辑判断
 			if(i <= 3)  // PC3(0), PC4(1), PC5(2), PC6(3)
 			{
-				// 只有当PB0对应的bit13也被置位时，PC3-PC6才能输出高电平
-				if((result&(0x01<<13))==(0x01<<13))  // PB0被置位
+				// 只有当PB4对应的bit16也被置位时，PC3-PC6才能输出高电平
+				if((result&(0x01<<16))==(0x01<<16))  // PB4被置位
 				{
 					GPIO_SetBits(IO_App_Out_Struct[i].GPIOx,IO_App_Out_Struct[i].GPIO_Pin);
 				}
