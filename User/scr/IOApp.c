@@ -196,6 +196,12 @@ void IO_APP_Get_IO_Value(uint8_t * UartTxBuff)
 #if DEVICE_MODE==DEVICE_MODE_RECV
     // 保存原始result作为输入状态
     originalResult = result;
+
+    // LED9 feedback bit8 is triggered by PA15 or PB3 high level.
+    if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_3) == SET)
+    {
+        result |= (0x01<<8);
+    }
     
     // 对于PC3-PC6（bit0-3），返回最后接收到的原始激活状态
     result = result & 0xFFFFFFF0;  // 清除bit0-3
